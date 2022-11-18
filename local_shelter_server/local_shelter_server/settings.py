@@ -86,12 +86,12 @@ WSGI_APPLICATION = 'local_shelter_server.wsgi.application'
 DATABASES = {
     'default': {
         'CONN_MAX_AGE': 0,
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': 'localhost',
-        'NAME': 'local_shelter_server',
-        'PASSWORD': '0110',
-        'PORT': '3306',
-        'USER': 'shelter01'
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': 'cms_shelter_db',
+        'NAME': 'cms_shelter_server',
+        'PASSWORD': '20121208',
+        'PORT': '5433',
+        'USER': 'shelter'
     }
 }
 
