@@ -1,4 +1,4 @@
-import pymysql, time, datetime, schedule, json, os
+import pymysql, psycopg2, time, datetime, schedule, json, os
 from pathlib import Path
 import ftpMediaDownloadClient as ftp
 from tabulate import tabulate  # DB 데이터 출력 시 깔끔하게 출력
@@ -9,6 +9,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # 일단 같은 로컬 서버 내에서 DB 연결 수행
 # 하지만 외부 쉘터 DB에서 접근해야함으로 이렇게하면 안됨
+
+cms_main_ip = os.environ['CMS_MAIN_IP']
+cms_main_dbpw = None
+
+'''
 CMS_MAIN_SERVER_DB = pymysql.connect(host='localhost',  # DB 주소
                                      port=3306,  # DB port
                                      user='main01',  # DB 관리자 계정
@@ -16,12 +21,22 @@ CMS_MAIN_SERVER_DB = pymysql.connect(host='localhost',  # DB 주소
                                      db='cms_main',  # DB 명
                                      charset='utf8',
                                      cursorclass=pymysql.cursors.DictCursor)
+                                     '''
+
+CMS_MAIN_SERVER_DB = psycopg2.connect(host=cms_main_ip,  # DB 주소
+                                     port=5432,  # DB port
+                                     user='main',  # DB 관리자 계정
+                                     password='20121208',  # DB 접속 비밀번호
+                                     dbname='cms_main_server',  # DB 명
+                                     )
+
 print(CMS_MAIN_SERVER_DB)
 main_cursor = CMS_MAIN_SERVER_DB.cursor()  # control structure of database(연결 객체로 봐도 무방)
 print(main_cursor)
 print(CMS_MAIN_SERVER_DB.open)
 print(CMS_MAIN_SERVER_DB.ping())
 
+'''
 LOCAL_SHELTER_SERVER_DB = pymysql.connect(host='localhost',  # DB 주소
                                           port=3306,  # DB port
                                           user='shelter01',  # DB 관리자 계정
@@ -29,6 +44,15 @@ LOCAL_SHELTER_SERVER_DB = pymysql.connect(host='localhost',  # DB 주소
                                           db='cms_shelter01',  # DB 명
                                           charset='utf8',
                                           cursorclass=pymysql.cursors.DictCursor)
+                                          '''
+
+LOCAL_SHELTER_SERVER_DB = psycopg2.connect(host='localhost',  # DB 주소
+                                          port=5433,  # DB port
+                                          user='shelter',  # DB 관리자 계정
+                                          password='20121208',  # DB 접속 비밀번호
+                                          dbname='cms_shelter_server',  # DB 명
+                                          )
+
 print(LOCAL_SHELTER_SERVER_DB)
 local_cursor = LOCAL_SHELTER_SERVER_DB.cursor()  # control structure of database(연결 객체로 봐도 무방)
 print(local_cursor)
