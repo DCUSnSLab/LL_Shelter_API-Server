@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-import pymysql, json, os
+import psycopg2, pymysql, json, os
 from pathlib import Path
 
 # 일단 같은 로컬 서버 내에서 DB 연결 수행
@@ -17,30 +17,44 @@ from pathlib import Path
 def CheckShelter(name, number):
 
     # 메인서버 DB접속, 보안문제가 있음
+    '''
     CheckShelter = pymysql.connect(host='localhost',  # DB 주소
                                    port=3306,  # DB port
                                    user='main01',  # DB 관리자 계정
                                    passwd='0110',  # DB 접속 비밀번호
                                    db='cms_main_server',  # DB 명
                                    charset='utf8', )
+    '''
+    cms_main_ip = os.environ['CMS_MAIN_IP']
+    cms_main_dbpw = None
+
+    CheckShelter = psycopg2.connect(host=cms_main_ip,
+                                    port=5432,
+                                    user='main',
+                                    password='20121208',
+                                    dbname='cms_main_server'
+                                    )
 
     # print(CheckShelter)
     cursor = CheckShelter.cursor()  # control structure of database(연결 객체로 봐도 무방)
     # print(cursor)
 
-    sql = "SELECT id FROM Management_shelter WHERE title = %s AND access_number = %s"
+    # sql = "SELECT id FROM Management_shelter WHERE title = %s AND access_number = %s"
+    sql = "SELECT id FROM \"Management_shelter\" WHERE title = '{title}' AND access_number = '{access_number}'".format(title=name, access_number=number)
 
     values = (name, number)
 
     try:
-        cursor.execute(sql, values)
+        #cursor.execute(sql, values)
+        cursor.execute(sql)
 
         result = cursor.fetchall()
         CheckShelter.close()
 
         return result[0][0]     # tuple 리턴
 
-    except:
+    except Exception as e:
+        print(e)
         print("조회한 쿼리가 없음")
         return None
 
