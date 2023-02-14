@@ -3,6 +3,7 @@ from pathlib import Path
 import ftpMediaDownloadClient as ftp
 from tabulate import tabulate  # DB 데이터 출력 시 깔끔하게 출력
 from filer import createDirectory
+from psycopg2.extras import RealDictCursor
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -31,7 +32,7 @@ CMS_MAIN_SERVER_DB = psycopg2.connect(host=cms_main_ip,  # DB 주소
                                      )
 
 print(CMS_MAIN_SERVER_DB)
-main_cursor = CMS_MAIN_SERVER_DB.cursor()  # control structure of database(연결 객체로 봐도 무방)
+main_cursor = CMS_MAIN_SERVER_DB.cursor(cursor_factory=RealDictCursor)  # control structure of database(연결 객체로 봐도 무방)
 print(main_cursor)
 #print(CMS_MAIN_SERVER_DB.open)
 #print(CMS_MAIN_SERVER_DB.ping())
@@ -54,7 +55,7 @@ LOCAL_SHELTER_SERVER_DB = psycopg2.connect(host='cms_shelter_db',  # DB 주소
                                           )
 
 print(LOCAL_SHELTER_SERVER_DB)
-local_cursor = LOCAL_SHELTER_SERVER_DB.cursor()  # control structure of database(연결 객체로 봐도 무방)
+local_cursor = LOCAL_SHELTER_SERVER_DB.cursor(cursor_factory=RealDictCursor)  # control structure of database(연결 객체로 봐도 무방)
 print(local_cursor)
 #print(LOCAL_SHELTER_SERVER_DB.open)
 #print(LOCAL_SHELTER_SERVER_DB.ping())
@@ -101,7 +102,7 @@ def DoneUpdate():
 
 
 def RecordExistCheck():
-    local_cursor.execute("SELECT id from Updator_shelter")
+    local_cursor.execute("SELECT id from \"Updator_shelter\"")
     checksum = local_cursor.fetchall()
 
     # print(type(a))
@@ -121,7 +122,9 @@ def RecordExistCheck():
 def GetShelter(s_id, exist):
 
     if exist == False:
-        main_cursor.execute("SELECT * FROM Management_shelter WHERE id = %s", s_id)
+        print(s_id)
+        print(type(s_id))
+        main_cursor.execute("SELECT * FROM \"Management_shelter\" WHERE id = {id}".format(id=s_id))
 
         shelter = main_cursor.fetchall()
         for s in shelter:
@@ -141,10 +144,10 @@ def GetShelter(s_id, exist):
                       s['localupdateDate'],
                       )
 
-            local_cursor.execute("INSERT INTO Updator_shelter VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", values)
+            local_cursor.execute("INSERT INTO \"Updator_shelter\" VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", values)
 
             # Shelter_media
-            main_cursor.execute("SELECT * FROM Management_shelter_media WHERE shelterFK = %s", s['id'])
+            main_cursor.execute("SELECT * FROM \"Management_shelter_media\" WHERE \"shelterFK\" = {id}".format(id=s['id']))
 
 
             shelter_media = main_cursor.fetchall()
@@ -159,7 +162,7 @@ def GetShelter(s_id, exist):
                           )
 
                 if exist == False:
-                    local_cursor.execute("INSERT INTO Updator_shelter_media VALUES(%s, %s, %s, %s, %s);", values)
+                    local_cursor.execute("INSERT INTO \"Updator_shelter_media\" VALUES(%s, %s, %s, %s, %s);", values)
 
                     if sm['shelter_profile'] != "":
                         ftp.MediaDownload(sm['shelter_profile'])
