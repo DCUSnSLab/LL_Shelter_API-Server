@@ -295,8 +295,6 @@ def paint(request):
 @csrf_exempt
 def paintlist(request):
 
-    ip_address = socket.gethostbyname(socket.gethostname())
-
     picture = Drawing()
     getPicture = Drawing.objects.all()
     print("getPicture", getPicture)
