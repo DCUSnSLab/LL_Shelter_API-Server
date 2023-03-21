@@ -1,5 +1,7 @@
 import os.path
 
+import os
+
 from django.shortcuts import render, redirect
 
 from Updator.models import Shelter, Shelter_media, Content, Content_Description, \
@@ -293,6 +295,8 @@ def paint(request):
 @csrf_exempt
 def paintlist(request):
 
+    ip_address = socket.gethostbyname(socket.gethostname())
+
     picture = Drawing()
     getPicture = Drawing.objects.all()
     print("getPicture", getPicture)
@@ -324,19 +328,26 @@ def paintlist(request):
         picture.path = savePath
         picture.save()
 
+    ip_address = os.environ['CMS_SHELTER_IP']
+
     context = {
         'Picture': getPicture,
+        'Ipaddr': ip_address,
     }
 
     return render(request, 'Service/paintlist.html', context)
 
 def ViewPaint(request, id):
+
+    ip_address = os.environ['CMS_SHELTER_IP']
+
     print("ViewPaint")
 
     pic = Drawing.objects.get(id=id)
 
     context = {
         'Picture': pic,
+        'Ipaddr': ip_address,
     }
 
     return render(request, 'Service/ViewPaint.html', context)
