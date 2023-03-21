@@ -46,10 +46,10 @@
         <header id="headerArea">
             <div class="w3-top">
               <div class="w3-bar w3-black w3-card" style="font-size: 3vw; font-family: 'MinSans-Medium' !important;">
-                <a href="." class="w3-bar-item w3-button w3-padding-large" \
-                   style="justify-content: center;">GALLERY</a>
-                <a href="{% url 'Idle' %}" class="w3-bar-item w3-button w3-padding-large w3-hide-small" \
-                   style="justify-content: center;" >COMMUNITY</a>
+{#                <a href="." class="w3-bar-item w3-button w3-padding-large" style="justify-content: center;">GALLERY</a>#}
+{#                <a href="{% url 'Idle' %}" class="w3-bar-item w3-button w3-padding-large w3-hide-small" style="justify-content: center;" >COMMUNITY</a>#}
+                <a href="http://{{ Ipaddr }}:3000/select" class="w3-bar-item w3-button w3-padding-large" style="justify-content: center;">GALLERY</a>
+                <a href="http://{{ Ipaddr }}:3000/board" class="w3-bar-item w3-button w3-padding-large w3-hide-small" style="justify-content: center;" >COMMUNITY</a>
               </div>
             </div>
 
