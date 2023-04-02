@@ -290,7 +290,13 @@ def DailyBoard(request):
 # 그림판
 def paint(request):
 
-    return render(request, 'Service/paint.html')
+    ip_address = os.environ['CMS_SHELTER_IP']
+
+    context = {
+        'Ipaddr': ip_address,
+    }
+
+    return render(request, 'Service/paint.html', context)
 
 @csrf_exempt
 def paintlist(request):
@@ -334,18 +340,3 @@ def paintlist(request):
     }
 
     return render(request, 'Service/paintlist.html', context)
-
-def ViewPaint(request, id):
-
-    ip_address = os.environ['CMS_SHELTER_IP']
-
-    print("ViewPaint")
-
-    pic = Drawing.objects.get(id=id)
-
-    context = {
-        'Picture': pic,
-        'Ipaddr': ip_address,
-    }
-
-    return render(request, 'Service/ViewPaint.html', context)
