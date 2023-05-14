@@ -102,7 +102,7 @@ DATABASES = {
     'default': {
         'CONN_MAX_AGE': 0,
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST': 'cms_shelter_db',
+        'HOST': 'cms-shelter-db',
         'NAME': 'cms_shelter_server',
         'PASSWORD': '20121208',
         'PORT': '5433',
