@@ -194,6 +194,11 @@ class Content(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100, null=True)
     email = models.EmailField(max_length=128, verbose_name="사용자 이메일", null=True, blank=True)
+    
+    phonenum = models.TextField(null=True) # 연락처
+    author = models.TextField(max_length=30, null=False, default='') # 작자명
+    disclosure_status = models.BooleanField(default=False) # 공개여부 체크박스
+    confirmation_use_information_status = models.BooleanField(default=False) # 정보 이용 동의 체크박스
 
     content_status = models.CharField(max_length=5, null=True, default="대기")  # 상태
     contentType = models.CharField(max_length=10, null=True)
