@@ -190,18 +190,24 @@ class Advertisement_media(models.Model):
     advertisementFK = models.ForeignKey(Advertisement, on_delete=models.CASCADE,
                                   db_column="advertisementFK", null=True, blank=True, related_name='Ad_Media')
 
+CONTENT_TYPE = (
+    ('영상', 'Video'),
+    ('사진', 'Image'),
+)
+
 class Content(models.Model):
+
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=100, null=True)
-    email = models.EmailField(max_length=128, verbose_name="사용자 이메일", null=True, blank=True)
+    title = models.CharField(max_length=100, null=False)
+    email = models.EmailField(max_length=128, verbose_name="사용자 이메일", null=False, blank=True)
     
     phonenum = models.TextField(null=True) # 연락처
     author = models.TextField(max_length=30, null=False, default='') # 작자명
     disclosure_status = models.BooleanField(default=False) # 공개여부 체크박스
     confirmation_use_information_status = models.BooleanField(default=False) # 정보 이용 동의 체크박스
-
+ 
     content_status = models.CharField(max_length=5, null=True, default="대기")  # 상태
-    contentType = models.CharField(max_length=10, null=True)
+    contentType = models.CharField(max_length=10, null=False, choices=CONTENT_TYPE)
     hits = models.DecimalField(max_digits=11, decimal_places=0, default=0, null=True)   # 조회수
     likes = models.DecimalField(max_digits=11, decimal_places=0, default=0, null=True)   # 좋아요수
 
@@ -218,6 +224,33 @@ class Content(models.Model):
 
     def __str__(self):
         return self.title
+    # id = models.AutoField(primary_key=True)
+    # title = models.CharField(max_length=100, null=True)
+    # email = models.EmailField(max_length=128, verbose_name="사용자 이메일", null=True, blank=True)
+    
+    # phonenum = models.TextField(null=True) # 연락처
+    # author = models.TextField(max_length=30, null=False, default='') # 작자명
+    # disclosure_status = models.BooleanField(default=False) # 공개여부 체크박스
+    # confirmation_use_information_status = models.BooleanField(default=False) # 정보 이용 동의 체크박스
+
+    # content_status = models.CharField(max_length=5, null=True, default="대기")  # 상태
+    # contentType = models.CharField(max_length=10, null=True)
+    # hits = models.DecimalField(max_digits=11, decimal_places=0, default=0, null=True)   # 조회수
+    # likes = models.DecimalField(max_digits=11, decimal_places=0, default=0, null=True)   # 좋아요수
+
+    # createDate = models.DateTimeField(auto_now_add=True)
+    # lastEditDate = models.DateTimeField(auto_now=True)
+    # isUpdate = models.BooleanField(default=False)  # 로컬쉘터서버 업데이트 여부
+
+    # shelterFK = models.ForeignKey(Shelter,
+    #                               on_delete=models.CASCADE,
+    #                               db_column="shelterFK",
+    #                               null=True,
+    #                               blank=True,
+    #                               related_name='Shelter_Content')
+
+    # def __str__(self):
+    #     return self.title
 
 class Content_Description(models.Model):
     id = models.AutoField(primary_key=True)
