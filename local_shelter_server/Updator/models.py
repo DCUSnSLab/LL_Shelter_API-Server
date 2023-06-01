@@ -201,8 +201,8 @@ class Content(models.Model):
     title = models.CharField(max_length=100, null=False)
     email = models.EmailField(max_length=128, verbose_name="사용자 이메일", null=False, blank=True)
     
-    phonenum = models.TextField(null=True) # 연락처
-    author = models.TextField(max_length=30, null=False, default='') # 작자명
+    phonenum = models.CharField(max_length=30, null=True) # 연락처
+    author = models.CharField(max_length=30, null=False, default='') # 작자명
     disclosure_status = models.BooleanField(default=False) # 공개여부 체크박스
     confirmation_use_information_status = models.BooleanField(default=False) # 정보 이용 동의 체크박스
  
@@ -214,6 +214,7 @@ class Content(models.Model):
     createDate = models.DateTimeField(auto_now_add=True)
     lastEditDate = models.DateTimeField(auto_now=True)
     isUpdate = models.BooleanField(default=False)  # 로컬쉘터서버 업데이트 여부
+
 
     shelterFK = models.ForeignKey(Shelter,
                                   on_delete=models.CASCADE,
