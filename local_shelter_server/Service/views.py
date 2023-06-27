@@ -14,6 +14,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import api_view
 from Service.serializer import Content_Description_Serializer, CommunitySerializer, Shelter_media_Serializer, Content_Serializer, CommunityMedia_Serializer, CommunityComment_Serializer, Issue_Board_Serializer
 from Updator.models import Content_Description, Community, Shelter_media, Content
 
@@ -54,7 +55,13 @@ class ContentViewAPI(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def get(request, *args, **kwargs):
-        content = Content.objects.all()
+        content = Content.objects.all().order_by('id')
+
+        for instance in content:
+            instance.hits = int(instance.hits)
+            instance.likes = int(instance.likes)
+            instance.save()
+
         serializer = Content_Serializer(content, many=True)
         return Response(serializer.data)
 
@@ -71,7 +78,7 @@ class SignageViewAPI(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def get(request, *args, **kwargs):
-        posts = Content_Description.objects.all()
+        posts = Content_Description.objects.all().order_by('id')
         serializer = Content_Description_Serializer(posts, many=True)
         return Response(serializer.data)
 
@@ -173,6 +180,7 @@ def contentDetailView(request, id):
 
     return render(request, 'Service/contentDetailView.html', context)
 
+@api_view(['GET', 'POST'])
 def ContentLike(request, id):
     print("contents like")
 
@@ -181,7 +189,9 @@ def ContentLike(request, id):
     contents.likes += 1
     contents.save()
 
-    return redirect('display:picture', contents.id)
+    # return Response({'Success'})
+    return Response({'like': int(contents.likes)})
+    # return redirect('display:picture', contents.id)
 
 def VODLike(request, id):
     print("VODLike ")
