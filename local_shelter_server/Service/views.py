@@ -193,6 +193,18 @@ def ContentLike(request, id):
     return Response({'like': int(contents.likes)})
     # return redirect('display:picture', contents.id)
 
+@api_view(['GET', 'POST'])
+def ContentHits(request, id):
+    print("contents hits")
+
+    contents = Content.objects.get(id=id)
+
+    contents.hits += 1
+    contents.save()
+
+    # return Response({'Success'})
+    return Response({'hits': int(contents.hits)})
+
 def VODLike(request, id):
     print("VODLike ")
 

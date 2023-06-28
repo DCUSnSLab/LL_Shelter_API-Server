@@ -15,6 +15,7 @@ urlpatterns = [
     path('Content/', ContentViewAPI.as_view(), name='content'),
     path('contentDetailView/<int:id>', views.contentDetailView, name="contentDetailView"),
     path('ContentLike/<int:id>', views.ContentLike, name="ContentLike"),
+    path('ContentHits/<int:id>', views.ContentHits, name="ContentHits"),
 
     path('community/', CommunityViewAPI.as_view(), name="community"),
     path('communityMedia/', commentMediaAPI.as_view(), name="communityMedia"),
