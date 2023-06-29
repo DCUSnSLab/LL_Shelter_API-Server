@@ -54,15 +54,28 @@ class commentMediaAPI(APIView):
 class ContentViewAPI(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
-    def get(request, *args, **kwargs):
-        content = Content.objects.all().order_by('id')
+    def get(self, request):
+
+        # sort_by use Content_Detail tables column.
+        sort_by = request.GET.get('sort_by')
+        order = request.GET.get('order')
+
+        content = Content_Description.objects.all().select_related('contentFK')
+
+        if sort_by:
+            if order == 'ascend':
+                content = Content_Description.objects.all().order_by('contentFK__' + sort_by)
+                # content = Content_Description.objects.all().select_related('contentFK').order_by('hits')
+            else:
+                content = Content_Description.objects.all().order_by('-contentFK__' + sort_by)
+                # content = Content_Description.objects.all().select_related('contentFK').order_by('-hits')
 
         for instance in content:
-            instance.hits = int(instance.hits)
-            instance.likes = int(instance.likes)
+            instance.contentFK.hits = int(instance.contentFK.hits)
+            instance.contentFK.likes = int(instance.contentFK.likes)
             instance.save()
 
-        serializer = Content_Serializer(content, many=True)
+        serializer = Content_Description_Serializer(content, many=True)
         return Response(serializer.data)
 
 def Idle(request):

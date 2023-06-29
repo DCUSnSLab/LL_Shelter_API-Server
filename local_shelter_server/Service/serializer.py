@@ -1,12 +1,6 @@
 from rest_framework import serializers
 from Updator.models import Content_Description, Community, Shelter_media, Content, Comment_media, Comment, Issue_Board
 
-class Content_Description_Serializer(serializers.ModelSerializer):
-    class Meta:
-        model = Content_Description
-        fields = ('id', 'upload_file', 'description', 'width', 'height', 'HVType', 'thumbnailPath', 'contentFK')
-
-
 class CommunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Community
@@ -22,6 +16,12 @@ class Content_Serializer(serializers.ModelSerializer):
         model = Content
         # fields = ('id', 'title', 'email', 'email', 'content_status', 'contentType',)
         fields =  '__all__'
+
+class Content_Description_Serializer(serializers.ModelSerializer):
+    contentFK = Content_Serializer()
+    class Meta:
+        model = Content_Description
+        fields = ('id', 'upload_file', 'description', 'width', 'height', 'HVType', 'thumbnailPath', 'contentFK')
 
 class CommunityMedia_Serializer(serializers.ModelSerializer):
     class Meta:
